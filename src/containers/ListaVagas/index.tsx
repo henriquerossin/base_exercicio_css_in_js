@@ -1,12 +1,10 @@
 import { useState } from 'react'
+import { ListaVagasEstilizada } from './styles'
 import FormVagas from '../../components/FormVagas'
-
 import Vaga from '../../components/Vaga'
 
-import styles from './ListaVagas.module.css'
-
 type Vaga = {
-  id: string
+  id: number
   titulo: string
   localizacao: string
   nivel: string
@@ -16,7 +14,7 @@ type Vaga = {
   requisitos: string[]
 }
 
-const vagas = [
+const vagas: Vaga[] = [
   {
     id: 1,
     titulo: 'Desenvolvedor front-end',
@@ -39,12 +37,12 @@ const vagas = [
   },
   {
     id: 3,
-    titulo: 'Desenvolvedor fullstack',
+    titulo: 'Designer de interfaces',
     localizacao: 'remoto',
-    nivel: 'pleno',
-    modalidade: 'pj',
+    nivel: 'junior',
+    modalidade: 'clt',
     salarioMin: 4000,
-    salarioMax: 6000,
+    salarioMax: 5000,
     requisitos: ['HTML', 'CSS', 'JavaScript', 'jQuery']
   },
   {
@@ -92,27 +90,20 @@ const vagas = [
 const ListaVagas = () => {
   const [filtro, setFiltro] = useState<string>('')
 
-  const vagasFiltradas = vagas.filter(
-    (x) => x.titulo.toLocaleLowerCase().search(filtro) >= 0
-  )
+  const vagasFiltradas = filtro
+    ? vagas.filter((vaga) =>
+        vaga.titulo.toLowerCase().includes(filtro.toLowerCase())
+      )
+    : vagas
 
   return (
     <div>
       <FormVagas aoPesquisar={(termo: string) => setFiltro(termo)} />
-      <ul className={styles.vagas}>
-        {vagasFiltradas.map((vag) => (
-          <Vaga
-            key={vag.id}
-            titulo={vag.titulo}
-            localizacao={vag.localizacao}
-            nivel={vag.nivel}
-            modalidade={vag.modalidade}
-            salarioMin={vag.salarioMin}
-            salarioMax={vag.salarioMax}
-            requisitos={vag.requisitos}
-          />
+      <ListaVagasEstilizada>
+        {vagasFiltradas.map((vaga) => (
+          <Vaga key={vaga.id} {...vaga} />
         ))}
-      </ul>
+      </ListaVagasEstilizada>
     </div>
   )
 }
